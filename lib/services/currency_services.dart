@@ -11,23 +11,22 @@ class CurrencyService {
 
   Future<dynamic> getCurrencyList() async {
     try {
-      final url = Uri.parse(Constants.BaseUrlForCurrencyList);
+      final url = Uri.parse(Constants.BaseUrlForExchange);
+
       http.Response response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        print(response.body);
-        return response.body;
+        var result = jsonDecode(response.body);
+        return result;
       }
     } catch (e) {}
   }
 
-  Future<dynamic> exchangeCurrency() async {
-    Map<String, String> params = {'from': 'SGD', 'to': 'MYR', 'q': '1.0'};
-
+  Future<dynamic> exchangeCurrency(from, to, q) async {
     try {
-      final url = Uri.https(Constants.BaseUrlForExchange, jsonEncode(params));
+      final url =
+          Uri.https(Constants.BaseUrlForExchange + '?from=$from&to=$to&q=$q');
       http.Response response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       }
     } catch (e) {}
